@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import {signAabFile, signApkFile} from "./signing";
+import { signAabFile, signApkFile } from "./signing";
 import path from "path";
 import fs from "fs";
 import * as io from "./io-utils";
@@ -11,11 +11,12 @@ async function run() {
       return;
     }
 
-    const releaseDir = core.getInput('releaseDirectory');
-    const signingKeyBase64 = core.getInput('signingKeyBase64');
-    const alias = core.getInput('alias');
-    const keyStorePassword = core.getInput('keyStorePassword');
+    const releaseDir = core.getInput('releaseDirectory', { required: true });
+    const signingKeyBase64 = core.getInput('signingKeyBase64', { required: true });
+    const alias = core.getInput('alias', { required: true });
+    const keyStorePassword = core.getInput('keyStorePassword', { required: true });
     const keyPassword = core.getInput('keyPassword');
+    const zipAlign = core.getBooleanInput('zipAlign')
 
     console.log(`Preparing to sign key @ ${releaseDir} with signing key`);
 
@@ -27,14 +28,14 @@ async function run() {
       fs.writeFileSync(signingKey, signingKeyBase64, 'base64');
 
       // 4. Now zipalign and sign each one of the the release files
-      let signedReleaseFiles:string[] = [];
+      let signedReleaseFiles: string[] = [];
       let index = 0;
       for (let releaseFile of releaseFiles) {
         core.debug(`Found release to sign: ${releaseFile.name}`);
         const releaseFilePath = path.join(releaseDir, releaseFile.name);
         let signedReleaseFile = '';
         if (releaseFile.name.endsWith('.apk')) {
-          signedReleaseFile = await signApkFile(releaseFilePath, signingKey, alias, keyStorePassword, keyPassword);
+          signedReleaseFile = await signApkFile(releaseFilePath, signingKey, alias, keyStorePassword, keyPassword, zipAlign);
         } else if (releaseFile.name.endsWith('.aab')) {
           signedReleaseFile = await signAabFile(releaseFilePath, signingKey, alias, keyStorePassword, keyPassword);
         } else {
@@ -66,7 +67,7 @@ async function run() {
       core.setFailed('No release files (.apk or .aab) could be found.');
     }
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(((error as any)?.message) ?? error);
   }
 }
 

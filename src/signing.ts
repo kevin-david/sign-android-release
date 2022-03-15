@@ -9,13 +9,14 @@ export async function signApkFile(
     signingKeyFile: string,
     alias: string,
     keyStorePassword: string,
-    keyPassword?: string
+    keyPassword?: string,
+    doZipAlign?: boolean
 ): Promise<string> {
 
     core.debug("Zipaligning APK file");
 
     // Find zipalign executable
-    const buildToolsVersion = process.env.BUILD_TOOLS_VERSION || '29.0.3';
+    const buildToolsVersion = process.env.BUILD_TOOLS_VERSION || '32.0.0';
     const androidHome = process.env.ANDROID_HOME;
     const buildTools = path.join(androidHome!, `build-tools/${buildToolsVersion}`);
     if (!fs.existsSync(buildTools)) {
@@ -26,17 +27,30 @@ export async function signApkFile(
     core.debug(`Found 'zipalign' @ ${zipAlign}`);
 
     // Align the apk file
-    const alignedApkFile = apkFile.replace('.apk', '-aligned.apk');
-    await exec.exec(`"${zipAlign}"`, [
-        '-c',
-        '-v', '4',
-        apkFile
-    ]);
-    
-    await exec.exec(`"cp"`, [
-        apkFile,
-        alignedApkFile
-    ]);
+    if (doZipAlign === true) {
+        const unAlignedApk = apkFile + ".unaligned";
+        fs.renameSync(apkFile, unAlignedApk);
+        await exec.exec(`"${zipAlign}"`, [
+            '-v',
+            '4',
+            unAlignedApk,
+            apkFile
+        ]);
+    }
+
+    // Verify alignment
+    try {
+        await exec.exec(`"${zipAlign}"`, [
+            '-c',
+            '-v', 
+            '4',
+            apkFile
+        ]);
+    }
+    catch (e) {
+        console.error(`zipalign verification failed: ${(e as any)?.message ?? e}.\n Did you mean to run this with  \`zipAlign: true\`?`);
+        throw e;
+    }
 
     core.debug("Signing APK file");
 
@@ -57,7 +71,8 @@ export async function signApkFile(
     if (keyPassword) {
         args.push('--key-pass', `pass:${keyPassword}`);
     }
-    args.push(alignedApkFile);
+
+    args.push(apkFile);
 
     await exec.exec(`"${apkSigner}"`, args);
 

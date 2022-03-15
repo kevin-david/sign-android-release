@@ -20,6 +20,10 @@ inputs:
   keyPassword:
     description: 'The password for the key'
     required: false
+  zipAlign:
+    description: 'Actually zipalign the apk, rather than just verifying it'
+    required: false
+    default: 'false'
 outputs:
   signedReleaseFile:
     description: 'The signed release APK or AAB file, if single'

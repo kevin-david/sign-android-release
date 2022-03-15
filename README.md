@@ -1,6 +1,6 @@
-# Sign Android Release Action
+# `zipalign` & Sign Android Release Action
 
-This action will help you sign an Android `.apk` or `.aab` (Android App Bundle) file for release.
+This action will help you `zipalign` and sign an Android `.apk` or `.aab` (Android App Bundle) file for release. Based on https://github.com/r0adkll/sign-android-release.
 
 ## Inputs
 
@@ -31,9 +31,13 @@ Then copy the contents of the `.txt` file to your GH secrets
 
 **Optional:** The private key password for your signing keystore
 
+### `zipAlign`
+
+**Optional:** True to run `zipalign` on the `.apk` to perform the operation, rather than just verify zipalign.
+
 ## ENV: `BUILD_TOOLS_VERSION`
 
-**Optional:** You can manually specify a version of build-tools to use. We use `29.0.3` by default.
+**Optional:** You can manually specify a version of build-tools to use. We use `32.0.0` by default.
 
 ## Outputs
 
@@ -68,7 +72,7 @@ steps:
       keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
       keyPassword: ${{ secrets.KEY_PASSWORD }}
     env:
-      # override default build-tools version (29.0.3) -- optional
+      # override default build-tools version (32.0.0) -- optional
       BUILD_TOOLS_VERSION: "30.0.2"
 
   # Example use of `signedReleaseFile` output -- not needed
@@ -116,7 +120,7 @@ before being used in a release action.
 
 ```yaml
 steps:
-  - uses: r0adkll/sign-android-release@v1
+  - uses: kevin-david/zipalign-sign-android-release@v1.1
     id: sign_app
     with:
       releaseDirectory: app/build/outputs/apk/release
@@ -124,6 +128,7 @@ steps:
       alias: ${{ secrets.ALIAS }}
       keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
       keyPassword: ${{ secrets.KEY_PASSWORD }}
+      zipAlign: true
 
   - uses: jungwinter/split@v1
     id: signed_files
