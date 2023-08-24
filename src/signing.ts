@@ -31,6 +31,7 @@ export async function signApkFile(
         const unAlignedApk = apkFile + ".unaligned";
         fs.renameSync(apkFile, unAlignedApk);
         await exec.exec(`"${zipAlign}"`, [
+            '-p',
             '-v',
             '4',
             unAlignedApk,
