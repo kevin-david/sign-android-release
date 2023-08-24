@@ -1,4 +1,4 @@
-name: 'ZipAlign & Sign Android release'
+name: 'ZipAlign & Sign APK'
 description: 'An action to zipalign & sign an Android release APK or AAB'
 author: 'kevin-david'
 branding:
