@@ -31,7 +31,7 @@ async function run() {
       let signedReleaseFiles: string[] = [];
       let index = 0;
       for (let releaseFile of releaseFiles) {
-        core.debug(`Found release to sign: ${releaseFile.name}`);
+        core.debug(`Found release to sign: ${releaseFile.name}, zipAlign: ${zipAlign}`);
         const releaseFilePath = path.join(releaseDir, releaseFile.name);
         let signedReleaseFile = '';
         if (releaseFile.name.endsWith('.apk')) {

@@ -37,6 +37,8 @@ export async function signApkFile(
             unAlignedApk,
             apkFile
         ]);
+    } else {
+        core.debug(`Skipping zipalign: ${doZipAlign}`);
     }
 
     // Verify alignment
