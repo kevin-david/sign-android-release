@@ -61,7 +61,7 @@ The output variable `signedReleaseFile` can be used in a release action.
 
 ```yaml
 steps:
-  - uses: kevin-david/zipalign-sign-android-release@v1.1
+  - uses: kevin-david/zipalign-sign-android-release@v1.1.1
     name: Sign app APK
     # ID used to access action output
     id: sign_app
@@ -90,7 +90,7 @@ can be used to refer to each signed release file.
 
 ```yaml
 steps:
-  - uses: kevin-david/zipalign-sign-android-release@v1.1
+  - uses: kevin-david/zipalign-sign-android-release@v1.1.1
     id: sign_app
     with:
       releaseDirectory: app/build/outputs/apk/release
