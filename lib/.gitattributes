@@ -1,2 +1,2 @@
 # Make ncc output consistent
-*.js text=auto eol=lf
+*.js text eol=lf
