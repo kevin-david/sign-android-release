@@ -39,4 +39,4 @@ jobs:
       - name: Run unit tests
         run: npm run test
 
-      - uses: "./.github/shared/functional-tests.yml"
+      - uses: "./.github/shared/functional-tests"

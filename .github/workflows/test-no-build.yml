@@ -15,4 +15,4 @@ jobs:
       - uses: actions/checkout@v4
         name: Checkout
 
-      - uses: "./.github/shared/functional-tests.yml"
+      - uses: "./.github/shared/functional-tests"
