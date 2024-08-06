@@ -10,9 +10,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
-    name: Test action
+    name: Build and test
 
     steps:
       - uses: actions/checkout@v4
