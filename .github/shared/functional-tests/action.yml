@@ -5,6 +5,7 @@ runs:
   using: "composite"
   steps:
     - name: Load test key
+      shell: bash
       id: get_key
       run: |
         value=$(cat src/tests/test_key_b64.txt)
