@@ -1,0 +1,39 @@
+name: "Functional tests"
+description: "Run functional tests against the app in lib/index.js"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Load test key
+      id: get_key
+      run: |
+        value=$(cat src/tests/test_key_b64.txt)
+        echo "text=$value" >> $GITHUB_OUTPUT
+
+    - uses: ./
+      name: zipalign and Sign APK
+      with:
+        releaseDirectory: src/tests/apk-zip
+        signingKeyBase64: ${{ steps.get_key.outputs.text }}
+        alias: test_key
+        keyStorePassword: android
+        keyPassword: android
+        zipAlign: true
+
+    - uses: ./
+      name: Sign APK
+      with:
+        releaseDirectory: src/tests/apk
+        signingKeyBase64: ${{ steps.get_key.outputs.text }}
+        alias: test_key
+        keyStorePassword: android
+        keyPassword: android
+
+    - uses: ./
+      name: Sign AAB
+      with:
+        releaseDirectory: src/tests/aab
+        signingKeyBase64: ${{ steps.get_key.outputs.text }}
+        alias: test_key
+        keyStorePassword: android
+        keyPassword: android

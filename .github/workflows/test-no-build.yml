@@ -1,0 +1,18 @@
+name: "Test compiled action"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test action
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      - uses: "./.github/shared/functional-tests.yml"
