@@ -41,7 +41,7 @@ Then copy the contents of the `.txt` file to your GH secrets
 
 ## ENV: `BUILD_TOOLS_VERSION`
 
-**Optional:** You can manually specify a version of build-tools to use. We use `33.0.0` by default.
+**Optional:** You can manually specify a version of build-tools to use. We use `35.0.0` by default.
 
 ## Outputs
 
@@ -77,8 +77,8 @@ steps:
       keyPassword: ${{ secrets.KEY_PASSWORD }}
       zipAlign: true
     env:
-      # override default build-tools version (33.0.0) -- optional
-      BUILD_TOOLS_VERSION: "34.0.0"
+      # override default build-tools version (35.0.0) -- optional
+      BUILD_TOOLS_VERSION: "35.0.0"
 
   # Example use of `signedReleaseFile` output -- not needed
   - uses: actions/upload-artifact@v4
